@@ -1,9 +1,8 @@
 mod day1;
+mod day2;
 
 fn main() {
-    let funcs = [
-        day1::PARTS,
-    ];
+    let funcs = [day1::PARTS, day2::PARTS];
     let mut args = std::env::args();
     args.next();
     if let Some(x) = args.next() {

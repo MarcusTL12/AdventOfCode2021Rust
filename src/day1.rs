@@ -7,7 +7,7 @@ use itertools::Itertools;
 
 pub const PARTS: [fn(); 2] = [part1, part2];
 
-pub fn part1() {
+fn part1() {
     let ans = BufReader::new(File::open("input/day1/input").unwrap())
         .lines()
         .map(|l| l.unwrap().parse::<u64>().unwrap())
@@ -18,7 +18,7 @@ pub fn part1() {
     println!("{}", ans);
 }
 
-pub fn part2() {
+fn part2() {
     let ans = BufReader::new(File::open("input/day1/input").unwrap())
         .lines()
         .map(|l| l.unwrap().parse::<u64>().unwrap())
