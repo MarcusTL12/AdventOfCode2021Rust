@@ -51,7 +51,7 @@ fn get_score(board: &Array2<Option<u32>>) -> Option<u32> {
 fn play_board(
     nums: &[u32],
     board: &mut Array2<Option<u32>>,
-) -> (usize, u32, u32) {
+) -> (usize, u32) {
     for (i, &n) in nums.iter().enumerate() {
         for c in board.iter_mut() {
             match *c {
@@ -61,7 +61,7 @@ fn play_board(
         }
 
         if let Some(score) = get_score(board) {
-            return (i, score, n);
+            return (i, score * n);
         }
     }
 
@@ -71,23 +71,23 @@ fn play_board(
 fn part1() {
     let (nums, mut boards) = parse_input("input/day4/input");
 
-    let (_, score, n) = boards
+    let (_, score) = boards
         .iter_mut()
         .map(|board| play_board(&nums, board))
-        .min_by_key(|&(a, _, _)| a)
+        .min_by_key(|&(a, _)| a)
         .unwrap();
 
-    println!("{}", score * n);
+    println!("{}", score);
 }
 
 fn part2() {
     let (nums, mut boards) = parse_input("input/day4/input");
 
-    let (_, score, n) = boards
+    let (_, score) = boards
         .iter_mut()
         .map(|board| play_board(&nums, board))
-        .max_by_key(|&(a, _, _)| a)
+        .max_by_key(|&(a, _)| a)
         .unwrap();
 
-    println!("{}", score * n);
+    println!("{}", score);
 }
