@@ -17,7 +17,6 @@ version = "0.1.0"
 dependencies = [
  "itertools",
  "ndarray",
- "num-integer",
  "once_cell",
  "regex",
 ]

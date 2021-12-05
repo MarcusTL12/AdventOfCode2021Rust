@@ -8,8 +8,6 @@ use itertools::Itertools;
 use once_cell::sync::Lazy;
 use regex::Regex;
 
-use num_integer::gcd;
-
 static REG: Lazy<Regex> =
     Lazy::new(|| Regex::new(r"(\d+),(\d+) -> (\d+),(\d+)").unwrap());
 
@@ -75,12 +73,8 @@ fn part2() {
                 }
             })
     {
-        let mut dx = x2 - x1;
-        let mut dy = y2 - y1;
-
-        let g = gcd(dx, dy);
-        dx /= g;
-        dy /= g;
+        let dx = (x2 - x1).signum();
+        let dy = (y2 - y1).signum();
 
         let mut x = x1 - dx;
         let mut y = y1 - dy;
