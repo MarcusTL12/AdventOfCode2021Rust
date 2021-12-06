@@ -1,10 +1,10 @@
 use std::{
-    collections::HashMap,
     fs::File,
     io::{BufRead, BufReader},
 };
 
 use itertools::Itertools;
+use ndarray::Array2;
 use once_cell::sync::Lazy;
 use regex::Regex;
 
@@ -14,7 +14,7 @@ static REG: Lazy<Regex> =
 pub const PARTS: [fn(); 2] = [part1, part2];
 
 fn part1() {
-    let mut points = HashMap::new();
+    let mut points = Array2::from_elem((1000, 1000), 0u8);
 
     for (x1, y1, x2, y2) in
         BufReader::new(File::open("input/day5/input").unwrap())
@@ -42,21 +42,22 @@ fn part1() {
             x += dx;
             y += dy;
 
-            if let Some(n) = points.get_mut(&(x, y)) {
-                *n += 1;
-            } else {
-                points.insert((x, y), 1usize);
+            match points.get_mut((x as usize, y as usize)) {
+                Some(x) if *x == 0 => *x = 1,
+                Some(x) if *x == 1 => *x = 2,
+                Some(2) => {}
+                _ => unreachable!(),
             }
         }
     }
 
-    let ans = points.values().filter(|&&x| x >= 2).count();
+    let ans = points.iter().filter(|&&x| x == 2).count();
 
     println!("{}", ans);
 }
 
 fn part2() {
-    let mut points = HashMap::new();
+    let mut points = Array2::from_elem((1000, 1000), 0u8);
 
     for (x1, y1, x2, y2) in
         BufReader::new(File::open("input/day5/input").unwrap())
@@ -83,15 +84,16 @@ fn part2() {
             x += dx;
             y += dy;
 
-            if let Some(n) = points.get_mut(&(x, y)) {
-                *n += 1;
-            } else {
-                points.insert((x, y), 1usize);
+            match points.get_mut((x as usize, y as usize)) {
+                Some(x) if *x == 0 => *x = 1,
+                Some(x) if *x == 1 => *x = 2,
+                Some(2) => {}
+                _ => unreachable!(),
             }
         }
     }
 
-    let ans = points.values().filter(|&&x| x >= 2).count();
+    let ans = points.iter().filter(|&&x| x == 2).count();
 
     println!("{}", ans);
 }
