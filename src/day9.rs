@@ -1,5 +1,6 @@
 use std::fs;
 
+use itertools::Itertools;
 use ndarray::{s, Array2, ArrayViewMut2};
 
 pub const PARTS: [fn(); 2] = [part1, part2];
@@ -49,12 +50,12 @@ fn part1() {
             }
         })
         .sum();
-    
+
     println!("{}", ans);
 }
 
 fn traverse_from(pos: [usize; 2], m: &mut ArrayViewMut2<u8>) -> usize {
-    let mut s = 0;
+    let mut s = 1;
 
     m[pos] = 9;
 
@@ -62,7 +63,7 @@ fn traverse_from(pos: [usize; 2], m: &mut ArrayViewMut2<u8>) -> usize {
         let ni = (pos[0] as isize + di) as usize;
         let nj = (pos[1] as isize + dj) as usize;
         let np = [ni, nj];
-        if matches!(m.get(np), Some(9)) {
+        if matches!(m.get(np), Some(0..=8)) {
             s += traverse_from(np, m);
         }
     }
@@ -72,7 +73,25 @@ fn traverse_from(pos: [usize; 2], m: &mut ArrayViewMut2<u8>) -> usize {
 
 fn part2() {
     let mut m = parse_input("input/day9/input");
-    let m = m.slice_mut(s![.., ..-1]);
+    let mut m = m.slice_mut(s![.., ..-1]);
 
-    todo!()
+    let mut basin_sizes = vec![0, 0, 0];
+
+    let s = m.shape();
+
+    for (i, j) in (0..s[0]).cartesian_product(0..s[1]) {
+        if m[(i, j)] != 9 {
+            basin_sizes.push(traverse_from([i, j], &mut m));
+            let (minind, _) = basin_sizes
+                .iter()
+                .enumerate()
+                .min_by_key(|(_, &x)| x)
+                .unwrap();
+            basin_sizes.remove(minind);
+        }
+    }
+
+    let ans: usize = basin_sizes.into_iter().product();
+
+    println!("{}", ans);
 }
