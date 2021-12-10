@@ -19,6 +19,7 @@ dependencies = [
  "ndarray",
  "once_cell",
  "regex",
+ "streaming-stats",
 ]
 
 [[package]]
@@ -126,3 +127,12 @@ name = "regex-syntax"
 version = "0.6.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f497285884f3fcff424ffc933e56d7cbca511def0c9831a7f9b5f6153e3cc89b"
+
+[[package]]
+name = "streaming-stats"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b0d670ce4e348a2081843569e0f79b21c99c91bb9028b3b3ecb0f050306de547"
+dependencies = [
+ "num-traits",
+]
