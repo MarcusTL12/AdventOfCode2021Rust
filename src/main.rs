@@ -1,6 +1,7 @@
 mod day1;
 mod day10;
 mod day11;
+mod day12;
 mod day2;
 mod day3;
 mod day4;
@@ -23,6 +24,7 @@ fn main() {
         day9::PARTS,
         day10::PARTS,
         day11::PARTS,
+        day12::PARTS,
     ];
     let mut args = std::env::args();
     args.next();
@@ -42,7 +44,7 @@ fn main() {
                 let subtimer = std::time::Instant::now();
                 println!("Part 2:");
                 parts[1]();
-                println!("{:?}\n", subtimer.elapsed());
+                println!("{:?}", subtimer.elapsed());
             }
             println!("===========================");
             println!("Took {:?}", timer.elapsed());
