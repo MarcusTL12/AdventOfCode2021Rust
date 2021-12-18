@@ -66,6 +66,7 @@ impl Node {
                     Node::Branch(_, r) => add_first_left(r, val),
                 }
             }
+
             match node {
                 Node::Branch(l, r) => match (&**l, &**r) {
                     (&Node::Leaf(l), &Node::Leaf(r)) if depth >= 4 => {
