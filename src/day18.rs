@@ -24,7 +24,7 @@ impl From<&str> for Node {
             match c {
                 '[' => {
                     let left = parse_node(chars);
-                    let _tmp = chars.next();
+                    chars.next();
                     while let Some(']' | ',') = chars.peek() {
                         chars.next();
                     }
