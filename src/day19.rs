@@ -1,6 +1,7 @@
-use std::{collections::HashSet, fs::read_to_string, mem::take, vec};
+use std::{collections::HashSet, fs::read_to_string, mem::take, thread, vec};
 
 use arrayvec::ArrayVec;
+use crossbeam_channel::unbounded;
 use itertools::Itertools;
 
 pub const PARTS: [fn(); 2] = [part1, part2];
@@ -90,7 +91,8 @@ fn find_overlap(s1: &[Point], s2: &mut [Point]) -> Option<Point> {
     None
 }
 
-fn part1() {
+// Single threaded solution
+fn _part1() {
     let mut inp = parse_input("input/day19/input");
 
     let mut fixed = HashSet::new();
@@ -121,7 +123,71 @@ fn part1() {
     println!("{}", ans);
 }
 
-fn part2() {
+fn part1() {
+    let mut inp = parse_input("input/day19/input");
+
+    let mut fixed = HashSet::new();
+    fixed.insert(0);
+
+    while fixed.len() < inp.len() {
+        for i in 0..inp.len() {
+            if fixed.contains(&i) {
+                let (distributer_s, distributer_r) =
+                    unbounded::<(usize, Vec<_>, Vec<_>)>();
+                let (collector_s, collector_r) = unbounded();
+
+                let handles: Vec<_> = (0..num_cpus::get())
+                    .map(|_| {
+                        let collector_s = collector_s.clone();
+                        let distributer_r = distributer_r.clone();
+                        thread::spawn(move || {
+                            for (j, a, mut b) in distributer_r.iter() {
+                                if find_overlap(&a, &mut b).is_some() {
+                                    collector_s.send((j, b, true)).unwrap();
+                                } else {
+                                    collector_s.send((j, b, false)).unwrap();
+                                }
+                            }
+                        })
+                    })
+                    .collect();
+
+                let mut amt_sent = 0;
+                for j in 0..inp.len() {
+                    if i != j && !fixed.contains(&j) {
+                        let tmp = take(&mut inp[j]);
+                        distributer_s.send((j, inp[i].clone(), tmp)).unwrap();
+                        amt_sent += 1;
+                    }
+                }
+                for _ in 0..amt_sent {
+                    let (j, tmp, b) = collector_r.recv().unwrap();
+                    if b {
+                        fixed.insert(j);
+                    }
+                    inp[j] = tmp;
+                }
+
+                drop(distributer_s);
+
+                for handle in handles {
+                    handle.join().unwrap();
+                }
+            }
+        }
+    }
+
+    let ans = inp
+        .into_iter()
+        .flat_map(|s| s.into_iter())
+        .collect::<HashSet<_>>()
+        .len();
+
+    println!("{}", ans);
+}
+
+// Single threaded solution
+fn _part2() {
     let mut inp = parse_input("input/day19/input");
 
     let mut fixed = HashSet::new();
@@ -141,6 +207,75 @@ fn part2() {
                         }
                         inp[j] = tmp;
                     }
+                }
+            }
+        }
+    }
+
+    let ans = scanners
+        .iter()
+        .cartesian_product(scanners.iter())
+        .map(|(a, b)| {
+            a.iter()
+                .zip(b.iter())
+                .map(|(a, b)| (a - b).abs())
+                .sum::<i64>()
+        })
+        .max()
+        .unwrap();
+
+    println!("{}", ans);
+}
+
+fn part2() {
+    let mut inp = parse_input("input/day19/input");
+
+    let mut fixed = HashSet::new();
+    fixed.insert(0);
+
+    let mut scanners = vec![[0, 0, 0]];
+
+    while fixed.len() < inp.len() {
+        for i in 0..inp.len() {
+            if fixed.contains(&i) {
+                let (distributer_s, distributer_r) =
+                    unbounded::<(usize, Vec<_>, Vec<_>)>();
+                let (collector_s, collector_r) = unbounded();
+
+                let handles: Vec<_> = (0..num_cpus::get())
+                    .map(|_| {
+                        let collector_s = collector_s.clone();
+                        let distributer_r = distributer_r.clone();
+                        thread::spawn(move || {
+                            for (j, a, mut b) in distributer_r.iter() {
+                                let p = find_overlap(&a, &mut b);
+                                collector_s.send((j, b, p)).unwrap();
+                            }
+                        })
+                    })
+                    .collect();
+
+                let mut amt_sent = 0;
+                for j in 0..inp.len() {
+                    if i != j && !fixed.contains(&j) {
+                        let tmp = take(&mut inp[j]);
+                        distributer_s.send((j, inp[i].clone(), tmp)).unwrap();
+                        amt_sent += 1;
+                    }
+                }
+                for _ in 0..amt_sent {
+                    let (j, tmp, b) = collector_r.recv().unwrap();
+                    if let Some(p) = b {
+                        fixed.insert(j);
+                        scanners.push(p);
+                    }
+                    inp[j] = tmp;
+                }
+
+                drop(distributer_s);
+
+                for handle in handles {
+                    handle.join().unwrap();
                 }
             }
         }
