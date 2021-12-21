@@ -1,10 +1,11 @@
 use std::{
-    collections::HashMap,
+    // collections::HashMap,
     fs::File,
     io::{BufRead, BufReader},
 };
 
 use arrayvec::ArrayVec;
+use hashbrown::HashMap;
 use itertools::Itertools;
 
 pub const PARTS: [fn(); 2] = [part1, part2];
