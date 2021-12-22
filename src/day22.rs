@@ -1,0 +1,195 @@
+use std::{
+    cmp::{max, min},
+    fs::File,
+    io::{BufRead, BufReader}, mem,
+};
+
+use arrayvec::ArrayVec;
+use hashbrown::HashMap;
+use itertools::Itertools;
+use once_cell::sync::Lazy;
+use regex::Regex;
+
+static REG: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(
+        r"(on|off) x=(-?\d+)..(-?\d+),y=(-?\d+)..(-?\d+),z=(-?\d+)..(-?\d+)",
+    )
+    .unwrap()
+});
+
+pub const PARTS: [fn(); 2] = [part1, part2];
+
+fn part1() {
+    let ans = BufReader::new(File::open("input/day22/input").unwrap())
+        .lines()
+        .map(|l| l.unwrap())
+        .map(|l| {
+            if let Some(c) = REG.captures(&l) {
+                (
+                    match &c[1] {
+                        "on" => true,
+                        "off" => false,
+                        _ => unreachable!(),
+                    },
+                    (2..=7)
+                        .map(|i| c[i].parse().unwrap())
+                        .collect::<ArrayVec<i64, 6>>()
+                        .into_inner()
+                        .unwrap(),
+                )
+            } else {
+                unreachable!()
+            }
+        })
+        .take_while(|(_, x)| x.iter().all(|x| x.abs() <= 50))
+        .flat_map(|(state, curbox)| {
+            (curbox[0]..=curbox[1])
+                .cartesian_product(curbox[2]..=curbox[3])
+                .cartesian_product(curbox[4]..=curbox[5])
+                .map(move |((x, y), z)| (state, (x, y, z)))
+        })
+        .fold(HashMap::new(), |mut screen, (state, pos)| {
+            if let Some(x) = screen.get_mut(&pos) {
+                *x = state;
+            } else {
+                screen.insert(pos, state);
+            }
+            screen
+        })
+        .values()
+        .filter(|&&x| x)
+        .count();
+
+    println!("{}", ans);
+}
+
+type BoxType = [i64; 6];
+
+fn is_any_overlap(a: &BoxType, b: &BoxType) -> bool {
+    !a.iter()
+        .zip(b.iter())
+        .tuples()
+        .any(|((a_lo, b_lo), (a_hi, b_hi))| a_lo > b_hi || a_hi < b_lo)
+}
+
+fn get_overlap(a: &BoxType, b: &BoxType) -> Option<[i64; 6]> {
+    if is_any_overlap(a, b) {
+        Some(
+            a.iter()
+                .zip(b.iter())
+                .tuples()
+                .flat_map(|((&a_lo, &a_hi), (&b_lo, &b_hi))| {
+                    [max(a_lo, b_lo), min(a_hi, b_hi)].into_iter()
+                })
+                .collect::<ArrayVec<_, 6>>()
+                .into_inner()
+                .unwrap(),
+        )
+    } else {
+        None
+    }
+}
+
+fn box_diff(a: &BoxType, b: &BoxType, buf: &mut Vec<BoxType>) {
+    if let Some(b) = get_overlap(a, b) {
+        if a[0] < b[0] {
+            buf.push([a[0], b[0] - 1, a[2], a[3], a[4], a[5]]);
+        }
+        if a[1] > b[1] {
+            buf.push([b[1] + 1, a[1], a[2], a[3], a[4], a[5]]);
+        }
+        if a[2] < b[2] {
+            buf.push([b[0], b[1], a[2], b[2] - 1, a[4], a[5]]);
+        }
+        if a[3] > b[3] {
+            buf.push([b[0], b[1], b[3] + 1, a[3], a[4], a[5]]);
+        }
+        if a[4] < b[4] {
+            buf.push([b[0], b[1], b[2], b[3], a[4], b[4] - 1]);
+        }
+        if a[5] > b[5] {
+            buf.push([b[0], b[1], b[2], b[3], b[5] + 1, a[5]]);
+        }
+    } else {
+        buf.push(*a);
+    }
+}
+
+fn many_box_diff(
+    boxes: &[BoxType],
+    subbox: &BoxType,
+    target: &mut Vec<BoxType>,
+) {
+    target.clear();
+    for curbox in boxes {
+        box_diff(curbox, subbox, target);
+    }
+}
+
+fn volume(b: &BoxType) -> i64 {
+    b.iter().tuples().map(|(a, b)| b - a + 1).product()
+}
+
+fn _part2() {
+    let mut screen = Vec::new();
+    let mut screen_buf = Vec::new();
+
+    let mut box_frags = Vec::new();
+    let mut box_frags_buf = Vec::new();
+
+    for (state, curbox) in
+        BufReader::new(File::open("input/day22/ex1").unwrap())
+            .lines()
+            .map(|l| l.unwrap())
+            .map(|l| {
+                if let Some(c) = REG.captures(&l) {
+                    (
+                        match &c[1] {
+                            "on" => true,
+                            "off" => false,
+                            _ => unreachable!(),
+                        },
+                        (2..=7)
+                            .map(|i| c[i].parse().unwrap())
+                            .collect::<ArrayVec<i64, 6>>()
+                            .into_inner()
+                            .unwrap(),
+                    )
+                } else {
+                    unreachable!()
+                }
+            })
+    {
+        if state {
+            box_frags.clear();
+            box_frags.push(curbox);
+            for cur_box in &screen {
+                box_frags_buf.clear();
+                many_box_diff(&box_frags, cur_box, &mut box_frags_buf);
+                mem::swap(&mut box_frags, &mut box_frags_buf);
+            }
+            screen.extend(box_frags.iter());
+        } else {
+            screen_buf.clear();
+            many_box_diff(&screen, &curbox, &mut screen_buf);
+            mem::swap(&mut screen, &mut screen_buf);
+        }
+    }
+
+    let ans: i64 = screen.iter().map(volume).sum();
+
+    println!("{}", ans);
+}
+
+fn part2() {
+    let a = [1, 3, 1, 3, 1, 3];
+    let b = [2, 4, 2, 4, 2, 4];
+
+    // let mut buf = Vec::new();
+
+    // box_diff(&a, &b, &mut buf);
+
+    // println!("{:?}", buf);
+
+    println!("{}", is_any_overlap(&a, &b));
+}
