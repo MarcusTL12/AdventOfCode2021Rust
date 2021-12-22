@@ -78,7 +78,7 @@ fn get_overlap(a: &BoxType, b: &BoxType) -> Option<[i64; 6]> {
             a.iter()
                 .zip(b.iter())
                 .tuples()
-                .flat_map(|((&a_lo, &a_hi), (&b_lo, &b_hi))| {
+                .flat_map(|((&a_lo, &b_lo), (&a_hi, &b_hi))| {
                     [max(a_lo, b_lo), min(a_hi, b_hi)].into_iter()
                 })
                 .collect::<ArrayVec<_, 6>>()
@@ -91,24 +91,24 @@ fn get_overlap(a: &BoxType, b: &BoxType) -> Option<[i64; 6]> {
 }
 
 fn box_diff(a: &BoxType, b: &BoxType, buf: &mut Vec<BoxType>) {
-    if let Some(b) = get_overlap(a, b) {
-        if a[0] < b[0] {
-            buf.push([a[0], b[0] - 1, a[2], a[3], a[4], a[5]]);
+    if let Some(c) = get_overlap(a, b) {
+        if a[0] < c[0] {
+            buf.push([a[0], c[0] - 1, a[2], a[3], a[4], a[5]]);
         }
-        if a[1] > b[1] {
-            buf.push([b[1] + 1, a[1], a[2], a[3], a[4], a[5]]);
+        if a[1] > c[1] {
+            buf.push([c[1] + 1, a[1], a[2], a[3], a[4], a[5]]);
         }
-        if a[2] < b[2] {
-            buf.push([b[0], b[1], a[2], b[2] - 1, a[4], a[5]]);
+        if a[2] < c[2] {
+            buf.push([c[0], c[1], a[2], c[2] - 1, a[4], a[5]]);
         }
-        if a[3] > b[3] {
-            buf.push([b[0], b[1], b[3] + 1, a[3], a[4], a[5]]);
+        if a[3] > c[3] {
+            buf.push([c[0], c[1], c[3] + 1, a[3], a[4], a[5]]);
         }
-        if a[4] < b[4] {
-            buf.push([b[0], b[1], b[2], b[3], a[4], b[4] - 1]);
+        if a[4] < c[4] {
+            buf.push([c[0], c[1], c[2], c[3], a[4], c[4] - 1]);
         }
-        if a[5] > b[5] {
-            buf.push([b[0], b[1], b[2], b[3], b[5] + 1, a[5]]);
+        if a[5] > c[5] {
+            buf.push([c[0], c[1], c[2], c[3], c[5] + 1, a[5]]);
         }
     } else {
         buf.push(*a);
@@ -130,7 +130,7 @@ fn volume(b: &BoxType) -> i64 {
     b.iter().tuples().map(|(a, b)| b - a + 1).product()
 }
 
-fn _part2() {
+fn part2() {
     let mut screen = Vec::new();
     let mut screen_buf = Vec::new();
 
@@ -138,7 +138,7 @@ fn _part2() {
     let mut box_frags_buf = Vec::new();
 
     for (state, curbox) in
-        BufReader::new(File::open("input/day22/ex1").unwrap())
+        BufReader::new(File::open("input/day22/input").unwrap())
             .lines()
             .map(|l| l.unwrap())
             .map(|l| {
@@ -181,15 +181,13 @@ fn _part2() {
     println!("{}", ans);
 }
 
-fn part2() {
-    let a = [1, 3, 1, 3, 1, 3];
-    let b = [2, 4, 2, 4, 2, 4];
+// fn part2() {
+//     let a = [1, 3, 1, 3, 1, 3];
+//     let b = [2, 4, 2, 4, 2, 4];
 
-    // let mut buf = Vec::new();
+//     let mut buf = Vec::new();
 
-    // box_diff(&a, &b, &mut buf);
+//     box_diff(&a, &b, &mut buf);
 
-    // println!("{:?}", buf);
-
-    println!("{}", is_any_overlap(&a, &b));
-}
+//     println!("{:?}", buf);
+// }
