@@ -180,14 +180,3 @@ fn part2() {
 
     println!("{}", ans);
 }
-
-// fn part2() {
-//     let a = [1, 3, 1, 3, 1, 3];
-//     let b = [2, 4, 2, 4, 2, 4];
-
-//     let mut buf = Vec::new();
-
-//     box_diff(&a, &b, &mut buf);
-
-//     println!("{:?}", buf);
-// }
