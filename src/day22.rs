@@ -1,7 +1,8 @@
 use std::{
     cmp::{max, min},
     fs::File,
-    io::{BufRead, BufReader}, mem,
+    io::{BufRead, BufReader},
+    mem,
 };
 
 use arrayvec::ArrayVec;
@@ -19,7 +20,8 @@ static REG: Lazy<Regex> = Lazy::new(|| {
 
 pub const PARTS: [fn(); 2] = [part1, part2];
 
-fn part1() {
+// Naive
+fn _part1() {
     let ans = BufReader::new(File::open("input/day22/input").unwrap())
         .lines()
         .map(|l| l.unwrap())
@@ -159,6 +161,58 @@ fn part2() {
                     unreachable!()
                 }
             })
+    {
+        if state {
+            box_frags.clear();
+            box_frags.push(curbox);
+            for cur_box in &screen {
+                box_frags_buf.clear();
+                many_box_diff(&box_frags, cur_box, &mut box_frags_buf);
+                mem::swap(&mut box_frags, &mut box_frags_buf);
+            }
+            screen.extend(box_frags.iter());
+        } else {
+            screen_buf.clear();
+            many_box_diff(&screen, &curbox, &mut screen_buf);
+            mem::swap(&mut screen, &mut screen_buf);
+        }
+    }
+
+    let ans: i64 = screen.iter().map(volume).sum();
+
+    println!("{}", ans);
+}
+
+fn part1() {
+    let mut screen = Vec::new();
+    let mut screen_buf = Vec::new();
+
+    let mut box_frags = Vec::new();
+    let mut box_frags_buf = Vec::new();
+
+    for (state, curbox) in
+        BufReader::new(File::open("input/day22/input").unwrap())
+            .lines()
+            .map(|l| l.unwrap())
+            .map(|l| {
+                if let Some(c) = REG.captures(&l) {
+                    (
+                        match &c[1] {
+                            "on" => true,
+                            "off" => false,
+                            _ => unreachable!(),
+                        },
+                        (2..=7)
+                            .map(|i| c[i].parse().unwrap())
+                            .collect::<ArrayVec<i64, 6>>()
+                            .into_inner()
+                            .unwrap(),
+                    )
+                } else {
+                    unreachable!()
+                }
+            })
+            .take_while(|(_, x)| x.iter().all(|x| x.abs() <= 50))
     {
         if state {
             box_frags.clear();
