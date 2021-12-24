@@ -52,11 +52,9 @@ fn rec<I: Iterator<Item = i64> + Clone>(
                 None
             }
         } else {
-            ds.clone()
-                .filter_map(|d| {
-                    rec(26 * z + c + d, &params[1..], 10 * n + d, ds.clone())
-                })
-                .next()
+            ds.clone().find_map(|d| {
+                rec(26 * z + c + d, &params[1..], 10 * n + d, ds.clone())
+            })
         }
     } else if z == 0 {
         Some(n)
