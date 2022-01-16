@@ -60,7 +60,7 @@ fn part1() {
         }
     }
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -116,5 +116,5 @@ fn part2() {
         }
     }
 
-    println!("{}", ans);
+    println!("{ans}");
 }

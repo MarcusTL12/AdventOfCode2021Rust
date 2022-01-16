@@ -121,7 +121,7 @@ fn part1() {
 
     let ans = do_iters(&rules, &img, 1);
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -129,5 +129,5 @@ fn part2() {
 
     let ans = do_iters(&rules, &img, 25);
 
-    println!("{}", ans);
+    println!("{ans}");
 }

@@ -33,7 +33,7 @@ fn part1() {
 
     let ans: u64 = fish.iter().sum();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -50,5 +50,5 @@ fn part2() {
 
     let ans: u64 = fish.iter().sum();
 
-    println!("{}", ans);
+    println!("{ans}");
 }

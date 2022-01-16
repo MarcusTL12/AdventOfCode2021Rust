@@ -46,7 +46,7 @@ fn part1() {
         .max()
         .unwrap();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -80,5 +80,5 @@ fn part2() {
         })
         .count();
 
-    println!("{}", ans);
+    println!("{ans}");
 }

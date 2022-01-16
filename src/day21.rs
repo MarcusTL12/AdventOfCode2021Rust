@@ -37,7 +37,7 @@ fn part1() {
 
     let ans = score.iter().min().unwrap() * amt_rolls;
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn rec(
@@ -99,5 +99,5 @@ fn part2() {
 
     let ans = [a, b].iter().cloned().max().unwrap();
 
-    println!("{}", ans);
+    println!("{ans}");
 }

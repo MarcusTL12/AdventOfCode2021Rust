@@ -113,7 +113,7 @@ fn part1() {
 
     let (_, _, ans) = parse_packet(&mut biterator);
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -127,5 +127,5 @@ fn part2() {
 
     let (ans, _, _) = parse_packet(&mut biterator);
 
-    println!("{}", ans);
+    println!("{ans}");
 }

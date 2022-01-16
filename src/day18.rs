@@ -159,7 +159,7 @@ fn part1() {
         .sum::<Node>()
         .magnitude();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -177,5 +177,5 @@ fn part2() {
         .max()
         .unwrap();
 
-    println!("{}", ans);
+    println!("{ans}");
 }

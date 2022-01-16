@@ -62,7 +62,7 @@ fn _part1() {
         .filter(|&&x| x)
         .count();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 type BoxType = [i64; 6];
@@ -180,7 +180,7 @@ fn part2() {
 
     let ans: i64 = screen.iter().map(volume).sum();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part1() {
@@ -232,5 +232,5 @@ fn part1() {
 
     let ans: i64 = screen.iter().map(volume).sum();
 
-    println!("{}", ans);
+    println!("{ans}");
 }

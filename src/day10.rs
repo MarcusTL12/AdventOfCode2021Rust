@@ -43,7 +43,7 @@ fn part1() {
         })
         .sum();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -94,5 +94,5 @@ fn part2() {
     )
     .unwrap() as u64;
 
-    println!("{}", ans);
+    println!("{ans}");
 }

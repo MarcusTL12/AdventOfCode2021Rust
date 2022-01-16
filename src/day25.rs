@@ -72,7 +72,7 @@ fn part1() {
         mem::swap(&mut m, &mut m_buf);
     }
 
-    println!("{}", i);
+    println!("{i}");
 }
 
 fn part2() {

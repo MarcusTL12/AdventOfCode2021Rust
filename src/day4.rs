@@ -77,7 +77,7 @@ fn part1() {
         .min_by_key(|&(a, _)| a)
         .unwrap();
 
-    println!("{}", score);
+    println!("{score}");
 }
 
 fn part2() {
@@ -89,5 +89,5 @@ fn part2() {
         .max_by_key(|&(a, _)| a)
         .unwrap();
 
-    println!("{}", score);
+    println!("{score}");
 }

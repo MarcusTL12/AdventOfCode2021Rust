@@ -76,7 +76,7 @@ fn part1() {
         }
     }
 
-    println!("{}", total);
+    println!("{total}");
 }
 
 fn part2() {
@@ -114,7 +114,7 @@ fn part2() {
         }
 
         if m.iter().all(|&x| x == 0) {
-            println!("{}", stepnum);
+            println!("{stepnum}");
             break;
         }
     }

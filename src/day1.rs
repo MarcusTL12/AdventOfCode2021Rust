@@ -15,7 +15,7 @@ fn part1() {
         .filter(|(a, b)| a < b)
         .count();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -28,5 +28,5 @@ fn part2() {
         .filter(|(a, b)| a < b)
         .count();
 
-    println!("{}", ans);
+    println!("{ans}");
 }

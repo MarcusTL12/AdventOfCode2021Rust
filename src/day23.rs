@@ -189,7 +189,7 @@ fn part1() {
 
     let ans = solve([top, bottom]);
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -197,5 +197,5 @@ fn part2() {
 
     let ans = solve([top, [4, 3, 2, 1], [4, 2, 1, 3], bottom]);
 
-    println!("{}", ans);
+    println!("{ans}");
 }

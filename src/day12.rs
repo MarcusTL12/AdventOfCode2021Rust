@@ -103,7 +103,7 @@ fn part1() {
 
     let ans = remaining_paths_from1(&graph, 0, &small_caves, &mut remaining);
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn remaining_paths_from2(
@@ -154,5 +154,5 @@ fn part2() {
     let ans =
         remaining_paths_from2(&graph, 0, &small_caves, &mut remaining, false);
 
-    println!("{}", ans);
+    println!("{ans}");
 }

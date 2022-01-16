@@ -51,7 +51,7 @@ fn part1() {
         })
         .sum();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn traverse_from(pos: [usize; 2], m: &mut ArrayViewMut2<u8>) -> usize {
@@ -93,5 +93,5 @@ fn part2() {
 
     let ans: usize = basin_sizes.into_iter().product();
 
-    println!("{}", ans);
+    println!("{ans}");
 }

@@ -58,7 +58,7 @@ fn part1() {
 
     let ans = coords.into_iter().collect::<HashSet<_>>().len();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {

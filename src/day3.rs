@@ -43,7 +43,7 @@ fn part1() {
 
     let ans = g * (!g & mask);
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -73,5 +73,5 @@ fn part2() {
 
     let ans = ox * co2;
 
-    println!("{}", ans);
+    println!("{ans}");
 }

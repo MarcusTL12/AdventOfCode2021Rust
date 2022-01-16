@@ -29,7 +29,7 @@ fn part1() {
         _ => 0,
     };
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -48,5 +48,5 @@ fn part2() {
         _ => 0,
     };
 
-    println!("{}", ans);
+    println!("{ans}");
 }

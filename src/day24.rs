@@ -68,7 +68,7 @@ fn part1() {
 
     let ans = rec(0, &params, 0, (1..=9).rev()).unwrap();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -76,5 +76,5 @@ fn part2() {
 
     let ans = rec(0, &params, 0, 1..=9).unwrap();
 
-    println!("{}", ans);
+    println!("{ans}");
 }

@@ -53,7 +53,7 @@ fn part1() {
 
     let ans = points.iter().filter(|&&x| x == 2).count();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -95,5 +95,5 @@ fn part2() {
 
     let ans = points.iter().filter(|&&x| x == 2).count();
 
-    println!("{}", ans);
+    println!("{ans}");
 }

@@ -120,7 +120,7 @@ fn _part1() {
         .collect::<HashSet<_>>()
         .len();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part1() {
@@ -183,7 +183,7 @@ fn part1() {
         .collect::<HashSet<_>>()
         .len();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 // Single threaded solution
@@ -224,7 +224,7 @@ fn _part2() {
         .max()
         .unwrap();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
 
 fn part2() {
@@ -293,5 +293,5 @@ fn part2() {
         .max()
         .unwrap();
 
-    println!("{}", ans);
+    println!("{ans}");
 }
